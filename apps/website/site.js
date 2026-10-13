@@ -51,18 +51,17 @@
   document.body.prepend(sentinel);
   new IntersectionObserver(([e]) => nav.classList.toggle('scrolled', !e.isIntersecting)).observe(sentinel);
 
-  // ---------- downloads: show file sizes, mark missing builds ----------
-  document.querySelectorAll('[data-file]').forEach(async (a) => {
-    try {
-      const res = await fetch(a.dataset.file, { method: 'HEAD' });
-      if (!res.ok) throw new Error();
-      const bytes = Number(res.headers.get('content-length'));
-      if (bytes) a.querySelector('.size').textContent = `(${bytes > 10485760 ? Math.round(bytes / 1048576) : (bytes / 1048576).toFixed(1)} MB)`;
-    } catch (_) {
-      a.classList.add('missing');
-      a.title = 'This build has not been published yet';
-    }
-  });
+  // ---------- downloads: show sizes from the latest GitHub release ----------
+  fetch('https://api.github.com/repos/abdelrhman-mohamed-dev/tasklist/releases/latest', { headers: { Accept: 'application/vnd.github+json' } })
+    .then(r => (r.ok ? r.json() : null))
+    .then(rel => {
+      if (!rel || !rel.assets) return;
+      document.querySelectorAll('[data-asset]').forEach(a => {
+        const asset = rel.assets.find(x => x.name === a.dataset.asset);
+        if (asset && asset.size) a.querySelector('.size').textContent = `(${asset.size > 10485760 ? Math.round(asset.size / 1048576) : (asset.size / 1048576).toFixed(1)} MB)`;
+      });
+    })
+    .catch(() => { /* sizes are optional */ });
 
   // ---------- point the hero buttons at the matching download card ----------
   document.querySelectorAll('[data-platform]').forEach(a => a.addEventListener('click', () => {

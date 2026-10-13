@@ -149,7 +149,6 @@ section { padding-block: clamp(72px, 10vw, 128px); }
 .dl-head > .ico { width: 26px; height: 26px; color: var(--accent); margin-top: 2px; }
 .dl-head p { color: var(--text-2); font-size: 15px; margin-top: 4px; }
 .dl .btn { justify-self: start; }
-.dl .btn.missing { opacity: .55; pointer-events: none; }
 details { border-top: 1px solid var(--hair); padding-top: 14px; font-size: 14.5px; }
 summary { cursor: pointer; color: var(--text-2); font-weight: 500; list-style: none; display: flex; align-items: center; gap: 8px; }
 summary::-webkit-details-marker { display: none; }
@@ -196,3 +195,9 @@ details p { margin-top: 10px; color: var(--text-2); }
   .device.phone { width: 34%; border-width: 5px; border-radius: 20px; }
   .foot nav { margin-left: 0; }
 }
+
+/* GitHub link in the nav */
+.gh-link { display: inline-flex; align-items: center; gap: 7px; padding: 8px 10px; border-radius: 8px; color: var(--text-2); text-decoration: none; font-size: 14.5px; font-weight: 500; transition: color .2s, background .2s; }
+.gh-link:hover { color: var(--text); background: var(--accent-soft); }
+.gh-link .gh { width: 18px; height: 18px; }
+@media (max-width: 640px) { .gh-link span { display: none; } .nav-row .gh-link { margin-left: auto; } .nav-row .gh-link + .btn { margin-left: 0; } }

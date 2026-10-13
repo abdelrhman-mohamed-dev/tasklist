@@ -28,7 +28,7 @@ Run these from the repository root.
 | `npm run desktop:dist` | Build the installer into `releases/Tasklist-Setup.exe` |
 | `npm run android:apk` | Build the signed APK into `releases/Tasklist.apk` |
 | `npm run website` | Build and serve the landing site at http://localhost:5175 |
-| `npm run release` | Build the installer, the APK and the website |
+| `npm run release` | Build the installer and the APK, and prepare the website |
 | `npm run icons` | Regenerate every icon (desktop, web, Android, website) |
 | `npm run screenshots` | Re-capture the website screenshots from the real app |
 
@@ -36,14 +36,12 @@ Requirements: Node.js 20+. The Android build also needs Android Studio (its SDK 
 
 ## Website
 
-`apps/website` is a static site: `index.html`, `styles.css`, `site.js` and `assets/`. `npm run website:build` adds two generated folders:
+Live at the Vercel deployment linked from the repository. `apps/website` is a static site: `index.html`, `styles.css`, `site.js` and `assets/`.
 
-- `app/`: a copy of `packages/core`, so the site hosts the web version at `/app/` and the quick-add demo runs the app's real parser.
-- `downloads/`: the installer and APK from `releases/`. A download button shows as unavailable until its file is built.
-
-To publish it, run `npm run release` and upload the whole `apps/website` folder to any static host.
-
-The screenshots in `assets/shots/` are real captures of the app (light and dark) made by `npm run screenshots`, which runs the desktop app with sample data in a throwaway profile.
+- `npm run website:build` copies `packages/core` into `apps/website/app/`, so the site hosts the web version at `/app/` and its quick-add demo runs the app's real parser.
+- Vercel deploys from this repository using `vercel.json`: it runs that build and serves `apps/website`. Every push to `main` redeploys.
+- The download buttons point at the latest [GitHub Release](https://github.com/abdelrhman-mohamed-dev/tasklist/releases). To publish a new version, build with `npm run desktop:dist` and `npm run android:apk`, then attach `releases/Tasklist-Setup.exe` and `releases/Tasklist.apk` to a new release with exactly those file names.
+- The screenshots in `assets/shots/` are real captures of the app (light and dark) made by `npm run screenshots`, which runs the desktop app with sample data in a throwaway profile.
 
 ## Desktop app (apps/desktop)
 
