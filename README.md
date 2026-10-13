@@ -1,5 +1,7 @@
 # Tasklist
 
+**Website: https://tasklist-coral-one.vercel.app** · [Downloads](https://github.com/abdelrhman-mohamed-dev/tasklist/releases/latest)
+
 A calm task manager for Windows, Android and the web, with AI planning (text completion, suggestions, roadmaps, mind maps) and private Wi-Fi sync between your phone and PC.
 
 ## Repository layout
@@ -36,7 +38,7 @@ Requirements: Node.js 20+. The Android build also needs Android Studio (its SDK 
 
 ## Website
 
-Live at the Vercel deployment linked from the repository. `apps/website` is a static site: `index.html`, `styles.css`, `site.js` and `assets/`.
+Live at **https://tasklist-coral-one.vercel.app**. `apps/website` is a static site: `index.html`, `styles.css`, `site.js` and `assets/`.
 
 - `npm run website:build` copies `packages/core` into `apps/website/app/`, so the site hosts the web version at `/app/` and its quick-add demo runs the app's real parser.
 - Vercel deploys from this repository using `vercel.json`: it runs that build and serves `apps/website`. Every push to `main` redeploys.
