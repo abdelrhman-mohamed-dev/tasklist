@@ -1,0 +1,26 @@
+# dependencies
+node_modules/
+
+# build output
+apps/desktop/dist/
+apps/desktop/web/
+apps/mobile/www/
+apps/mobile/android/app/build/
+apps/mobile/android/build/
+apps/mobile/android/.gradle/
+apps/mobile/android/local.properties
+apps/website/app/
+apps/website/downloads/
+releases/
+
+# Android release signing key: private, never commit (back it up separately)
+apps/mobile/android/keystore.properties
+*.jks
+*.keystore
+
+# local tools and editor state
+rea/
+.claude/settings.local.json
+*.log
+.DS_Store
+Thumbs.db

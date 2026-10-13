@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tasklist: plan your day, let AI map the rest</title>
+  <meta name="description" content="A calm task manager for Windows and Android with AI planning, roadmaps, mind maps and private Wi-Fi sync between your phone and PC.">
+  <meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1a1918" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="Tasklist">
+  <meta property="og:description" content="Plan your day. Let AI map the rest. For Windows, Android and the web.">
+  <meta property="og:image" content="assets/shots/desktop-today-light.png">
+  <link rel="icon" type="image/png" href="assets/icon-64.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav" id="top">
+    <div class="wrap nav-row">
+      <a class="logo" href="#top" aria-label="Tasklist home"><img src="assets/icon-64.png" alt="" width="28" height="28"><span>Tasklist</span></a>
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#write">Quick add</a>
+        <a href="#ai">AI planning</a>
+        <a href="#sync">Phone sync</a>
+        <a href="#download">Download</a>
+      </nav>
+      <a class="btn btn-primary btn-sm" href="#download">Download</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero: split, copy left and the real app right -->
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <h1 class="reveal">Plan the day.<br>Let AI map the rest.</h1>
+        <p class="lead reveal" style="--d:1">A calm task manager for Windows and Android, with AI planning and private Wi-Fi sync.</p>
+        <div class="cta-row reveal" style="--d:2">
+          <a class="btn btn-primary" href="#download" data-platform="windows"><i data-icon="download"></i>Download for Windows</a>
+          <a class="btn btn-ghost" href="#download" data-platform="android"><i data-icon="phone"></i>Get the Android app</a>
+        </div>
+      </div>
+      <div class="hero-visual reveal" style="--d:1">
+        <figure class="device desktop">
+          <picture>
+            <source srcset="assets/shots/desktop-today-dark.png" media="(prefers-color-scheme: dark)">
+            <img src="assets/shots/desktop-today-light.png" alt="Tasklist on Windows showing today's tasks, projects and labels" width="1280" height="800" fetchpriority="high">
+          </picture>
+        </figure>
+        <figure class="device phone">
+          <picture>
+            <source srcset="assets/shots/phone-today-dark.png" media="(prefers-color-scheme: dark)">
+            <img src="assets/shots/phone-today-light.png" alt="The same tasks in the Tasklist Android app" width="390" height="844" loading="lazy">
+          </picture>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Live quick-add demo: the app's real parser running on this page -->
+    <section class="write" id="write">
+      <div class="wrap narrow">
+        <h2 class="reveal">Type it the way you say it.</h2>
+        <p class="sub reveal">Dates, priorities, projects and labels are picked out while you type. This box runs the same parser as the app.</p>
+        <div class="demo reveal" style="--d:1">
+          <label class="demo-field">
+            <span class="demo-dot"><i data-icon="plus"></i></span>
+            <input id="demoInput" value="Pay rent tomorrow p1 #Home @bills" autocomplete="off" spellcheck="false" aria-label="Try a task">
+          </label>
+          <div class="demo-out" aria-live="polite">
+            <p class="demo-title" id="demoTitle"></p>
+            <div class="demo-chips" id="demoChips"></div>
+          </div>
+        </div>
+        <div class="examples reveal" style="--d:2" aria-label="Examples">
+          <button type="button" data-ex="Gym every week @health">Gym every week @health</button>
+          <button type="button" data-ex="Call Youssef friday">Call Youssef friday</button>
+          <button type="button" data-ex="Send the deck in 3 days p2 #Work">Send the deck in 3 days p2 #Work</button>
+          <button type="button" data-ex="Dentist 25 oct p3">Dentist 25 oct p3</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI: bento with real screenshots -->
+    <section class="ai wrap" id="ai">
+      <div class="section-head reveal">
+        <h2>AI that plans with you, on your terms.</h2>
+        <p class="sub">Bring your own key for Claude, GPT, GLM, Gemini or OpenRouter, or run a local model with Ollama.</p>
+      </div>
+      <div class="bento">
+        <article class="cell cell-map reveal">
+          <div class="cell-text">
+            <h3>Brainstorm a mind map</h3>
+            <p>Describe a topic and get branches and ideas. Every branch is a real task you can tick off.</p>
+          </div>
+          <div class="shot-crop crop-map">
+            <picture>
+              <source srcset="assets/shots/desktop-mindmap-dark.png" media="(prefers-color-scheme: dark)">
+              <img src="assets/shots/desktop-mindmap-light.png" alt="A mind map of an apartment move, with tasks branching from the project" loading="lazy" width="1280" height="800">
+            </picture>
+          </div>
+        </article>
+        <article class="cell cell-road reveal" style="--d:1">
+          <div class="cell-text">
+            <h3>Turn a goal into a roadmap</h3>
+            <p>Phases, dates and progress on one timeline.</p>
+          </div>
+          <div class="shot-crop crop-road">
+            <picture>
+              <source srcset="assets/shots/desktop-roadmap-dark.png" media="(prefers-color-scheme: dark)">
+              <img src="assets/shots/desktop-roadmap-light.png" alt="A portfolio launch roadmap split into research, design, build and launch phases" loading="lazy" width="1280" height="800">
+            </picture>
+          </div>
+        </article>
+        <article class="cell cell-complete reveal" style="--d:2">
+          <div class="cell-text">
+            <h3>Finishes your sentence</h3>
+            <p>A suggestion appears as you type. Press Tab, or tap it on your phone.</p>
+          </div>
+          <div class="shot-crop crop-complete">
+            <picture>
+              <source srcset="assets/shots/desktop-completion-dark.png" media="(prefers-color-scheme: dark)">
+              <img src="assets/shots/desktop-completion-light.png" alt="Quick add with an AI suggestion completing the task name" loading="lazy" width="1280" height="800">
+            </picture>
+          </div>
+        </article>
+        <article class="cell cell-suggest reveal">
+          <i data-icon="sparkle" class="cell-icon"></i>
+          <h3>Suggests what comes next</h3>
+          <p>One tap looks at a project and proposes the next few tasks, with a reason for each.</p>
+        </article>
+        <article class="cell cell-models reveal" style="--d:1">
+          <h3>Your model, your key</h3>
+          <p>Change the provider, address or model any time. Keys stay on your device.</p>
+          <ul class="models" aria-label="Supported providers">
+            <li>Claude</li><li>GPT</li><li>GLM Coding Plan</li><li>Gemini</li><li>OpenRouter</li><li>Ollama</li><li>Any OpenAI-compatible API</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Phone sync: split with the real pairing screen -->
+    <section class="sync" id="sync">
+      <div class="wrap sync-grid">
+        <div class="sync-visual reveal">
+          <figure class="device desktop small">
+            <picture>
+              <source srcset="assets/shots/desktop-pair-dark.png" media="(prefers-color-scheme: dark)">
+              <img src="assets/shots/desktop-pair-light.png" alt="The Connect your phone window on the PC, with a QR code" loading="lazy" width="1280" height="800">
+            </picture>
+          </figure>
+          <figure class="device phone small">
+            <picture>
+              <source srcset="assets/shots/phone-menu-dark.png" media="(prefers-color-scheme: dark)">
+              <img src="assets/shots/phone-menu-light.png" alt="The Android app showing Synced with PC" loading="lazy" width="390" height="844">
+            </picture>
+          </figure>
+        </div>
+        <div class="sync-copy">
+          <h2 class="reveal">In sync. No cloud account.</h2>
+          <p class="sub reveal">Tasklist on your PC syncs with your phone over your home Wi-Fi. Your tasks never pass through anyone's server.</p>
+          <ol class="flow">
+            <li class="reveal"><i data-icon="qr"></i><div><b>Scan once</b><span>Point the app at the code on your PC to pair.</span></div></li>
+            <li class="reveal" style="--d:1"><i data-icon="sync"></i><div><b>Edit anywhere</b><span>Changes show up on the other device within seconds.</span></div></li>
+            <li class="reveal" style="--d:2"><i data-icon="leaf"></i><div><b>Keep working offline</b><span>Away from home, your phone keeps its tasks and catches up later.</span></div></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Download -->
+    <section class="download wrap" id="download">
+      <h2 class="reveal">Get Tasklist</h2>
+      <div class="dl-grid">
+        <article class="dl dl-win reveal" id="dl-windows">
+          <div class="dl-head">
+            <i data-icon="monitor"></i>
+            <div><h3>Windows</h3><p>Windows 10 and 11. Includes the system-wide quick add and the phone sync hub.</p></div>
+          </div>
+          <a class="btn btn-primary" href="downloads/Tasklist-Setup.exe" download data-file="downloads/Tasklist-Setup.exe"><i data-icon="download"></i>Download installer<span class="size"></span></a>
+          <details>
+            <summary>Windows says it protected your PC</summary>
+            <p>The installer isn't code-signed yet. Click <b>More info</b>, then <b>Run anyway</b>.</p>
+          </details>
+        </article>
+        <article class="dl reveal" style="--d:1" id="dl-android">
+          <div class="dl-head">
+            <i data-icon="phone"></i>
+            <div><h3>Android</h3><p>Android 8.0 or newer.</p></div>
+          </div>
+          <a class="btn btn-ghost" href="downloads/Tasklist.apk" download data-file="downloads/Tasklist.apk"><i data-icon="download"></i>Download APK<span class="size"></span></a>
+          <details>
+            <summary>Android blocks the install</summary>
+            <p>Open the APK from <b>Files</b>. When asked, allow installs from that app, then tap <b>Install</b>. If Play Protect warns you, choose <b>Install anyway</b>.</p>
+          </details>
+        </article>
+        <article class="dl reveal" style="--d:2">
+          <div class="dl-head">
+            <i data-icon="globe"></i>
+            <div><h3>Web</h3><p>Runs in any modern browser. Tasks stay in that browser.</p></div>
+          </div>
+          <a class="btn btn-ghost" href="app/"><i data-icon="chevron"></i>Open in your browser</a>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-row">
+      <a class="logo" href="#top"><img src="assets/icon-64.png" alt="" width="24" height="24"><span>Tasklist</span></a>
+      <p>Free and open source under the MIT license.</p>
+      <nav aria-label="Footer">
+        <a href="#ai">AI planning</a>
+        <a href="#sync">Phone sync</a>
+        <a href="app/">Web app</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="app/icons.js"></script>
+  <script src="app/parser.js"></script>
+  <script src="site.js"></script>
+</body>
+</html>

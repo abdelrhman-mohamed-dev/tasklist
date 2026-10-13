@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Quick add</title>
+  <style>
+    :root {
+      --font: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+      --card: #ffffff; --text: #24211d; --muted: #8f8981; --hair: rgba(60,45,30,.10);
+      --accent: #d1493c; --accent-hover: #bd3c30; --accent-soft: rgba(209,73,60,.09); --accent-text: #b8392d;
+      --spring: cubic-bezier(.34,1.4,.5,1); --ease: cubic-bezier(.2,.7,.2,1);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --card: #232220; --text: #ece8e2; --muted: #8a847b; --hair: rgba(255,245,230,.09);
+        --accent: #e0594b; --accent-hover: #ea6a5d; --accent-soft: rgba(224,89,75,.14); --accent-text: #f08174; }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: transparent; font: 14px/1.45 var(--font); color: var(--text); overflow: hidden; -webkit-font-smoothing: antialiased; }
+    form {
+      margin: 10px; background: var(--card); border: 1px solid var(--hair); border-radius: 14px;
+      box-shadow: 0 18px 40px -12px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.08);
+      animation: in .28s var(--spring);
+    }
+    form.again { animation: in .28s var(--spring); }
+    @keyframes in { from { opacity: 0; transform: translateY(-6px) scale(.98); } }
+    .top { display: flex; align-items: center; gap: 10px; padding: 14px 16px 4px; }
+    .dot { width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; }
+    .ico { width: 14px; height: 14px; display: block; }
+    input { flex: 1; min-width: 0; border: 0; outline: none; background: none; color: inherit; font: 600 16px/1.4 var(--font); }
+    input::placeholder { color: var(--muted); font-weight: 500; }
+    .tokens { display: flex; flex-wrap: wrap; gap: 6px; min-height: 30px; padding: 4px 16px 8px 48px; }
+    .token { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 600; background: var(--accent-soft); color: var(--accent-text); animation: pop .22s var(--spring); }
+    .token .ico { width: 12px; height: 12px; }
+    @keyframes pop { from { opacity: 0; transform: scale(.85); } }
+    .row { display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--hair); padding: 8px 10px 8px 16px; }
+    .hint { flex: 1; color: var(--muted); font-size: 12px; display: flex; gap: 6px; align-items: center; }
+    kbd { font: 500 11px/1 var(--font); border: 1px solid var(--hair); border-bottom-width: 2px; border-radius: 5px; padding: 2px 5px; }
+    button { height: 30px; border: 0; border-radius: 7px; padding: 0 12px; font: 600 13px var(--font); cursor: pointer; transition: background .15s var(--ease), transform .12s var(--ease), opacity .15s; }
+    button:active { transform: translateY(1px) scale(.98); }
+    .cancel { background: none; color: var(--muted); }
+    .cancel:hover { background: rgba(127,127,127,.12); color: var(--text); }
+    .add { background: var(--accent); color: #fff; }
+    .add:hover { background: var(--accent-hover); }
+    .add:disabled { opacity: .45; cursor: default; transform: none; }
+  </style>
+</head>
+<body>
+  <form id="f">
+    <div class="top">
+      <span class="dot"><i data-icon="plus"></i></span>
+      <input id="t" placeholder="Pay rent tomorrow p1 #Home @bills" autocomplete="off" autofocus aria-label="Task">
+    </div>
+    <div class="tokens" id="p"></div>
+    <div class="row">
+      <span class="hint"><kbd>Enter</kbd> add <kbd>Esc</kbd> close</span>
+      <button type="button" class="cancel" id="c">Cancel</button>
+      <button class="add" id="a" disabled>Add task</button>
+    </div>
+  </form>
+  <script src="../web/icons.js"></script>
+  <script src="../web/parser.js"></script>
+  <script src="quickadd.js"></script>
+</body>
+</html>

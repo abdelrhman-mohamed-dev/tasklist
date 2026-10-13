@@ -1,0 +1,22 @@
+{
+  "name": "tasklist",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tasklist monorepo: shared app core, Windows desktop app, Android app and the landing website",
+  "license": "MIT",
+  "scripts": {
+    "setup": "npm --prefix apps/desktop install && npm --prefix apps/mobile install",
+    "web": "node scripts/serve.js packages/core 5173",
+    "desktop": "npm --prefix apps/desktop start",
+    "desktop:dist": "npm --prefix apps/desktop run dist",
+    "android:sync": "npm --prefix apps/mobile run sync",
+    "android:apk": "npm --prefix apps/mobile run apk",
+    "website": "node scripts/build-website.js && node scripts/serve.js apps/website 5175",
+    "website:build": "node scripts/build-website.js",
+    "release": "npm run desktop:dist && npm run android:apk && npm run website:build",
+    "icons": "node scripts/make-icons.js && node apps/mobile/android-assets.js",
+    "screenshots": "node apps/desktop/scripts/copy-web.js && node -e \"require('child_process').spawnSync(require('./apps/desktop/node_modules/electron'), ['scripts/capture-screenshots.js'], { stdio: 'inherit' })\"",
+    "start": "npm run desktop",
+    "dist": "npm run desktop:dist"
+  }
+}

@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; connect-src 'self' https: http:">
+  <meta name="description" content="A fast, keyboard-friendly task manager.">
+  <meta name="theme-color" content="#fdfcfa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1a1918" media="(prefers-color-scheme: dark)">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Tasklist">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Tasklist</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="ai.css">
+</head>
+<body>
+  <a class="skip-link" href="#taskArea">Skip to tasks</a>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="sidebar-top">
+        <div class="brand">
+          <span class="brand-mark"><i data-icon="check"></i></span>
+          <span class="brand-name">Tasklist</span>
+        </div>
+        <button class="icon-btn" id="settingsBtn" title="Settings" aria-label="Settings"><i data-icon="settings"></i></button>
+        <button class="icon-btn" id="themeToggle" title="Switch theme" aria-label="Switch theme"><i data-icon="moon"></i></button>
+        <button class="icon-btn" id="collapseBtn" title="Hide sidebar" aria-label="Hide sidebar"><i data-icon="sidebar"></i></button>
+      </div>
+
+      <button class="add-task-btn" id="openQuickAdd">
+        <span class="add-dot"><i data-icon="plus"></i></span>
+        <span>Add task</span>
+        <kbd>Q</kbd>
+      </button>
+
+      <label class="search">
+        <i data-icon="search"></i>
+        <input type="search" id="search" placeholder="Search" autocomplete="off" aria-label="Search tasks">
+        <kbd>/</kbd>
+      </label>
+
+      <nav class="nav" id="mainNav"></nav>
+
+      <div class="nav-section">
+        <div class="nav-heading">
+          <span>My projects</span>
+          <button class="icon-btn sm" id="addProject" title="Add project" aria-label="Add project"><i data-icon="plus"></i></button>
+        </div>
+        <form class="new-project" id="newProjectForm" hidden>
+          <span class="dot-preview" id="newProjectDot"></span>
+          <input id="newProjectInput" placeholder="Project name" maxlength="60" autocomplete="off">
+        </form>
+        <nav class="nav" id="projectNav"></nav>
+      </div>
+
+      <div class="nav-section" id="aiSection" hidden>
+        <div class="nav-heading"><span>AI planner</span></div>
+        <nav class="nav">
+          <a href="#" class="nav-item" id="openRoadmap"><span class="nav-icon ai-ico"><i data-icon="route"></i></span><span class="nav-label">Plan a roadmap</span></a>
+          <a href="#" class="nav-item" id="openBrainstorm"><span class="nav-icon ai-ico"><i data-icon="mindmap"></i></span><span class="nav-label">Brainstorm a mind map</span></a>
+        </nav>
+      </div>
+
+      <div class="nav-section" id="labelSection">
+        <div class="nav-heading"><span>Labels</span></div>
+        <nav class="nav" id="labelNav"></nav>
+      </div>
+
+      <div class="sync-card" id="syncCard" hidden>
+        <span class="sync-dot" id="syncDot"></span>
+        <span class="sync-text"><b id="syncTitle">Phone sync</b><span id="syncSub"></span></span>
+        <button class="chip-btn" id="connectPhone"><i data-icon="phone"></i><span>Connect</span></button>
+      </div>
+    </aside>
+    <div class="scrim" id="scrim"></div>
+
+    <main class="main" id="main">
+      <header class="view-header">
+        <button class="icon-btn menu-btn" id="menuBtn" title="Show sidebar" aria-label="Show sidebar"><i data-icon="menu"></i></button>
+        <div class="view-titles">
+          <h1 id="viewTitle">Inbox</h1>
+          <p class="view-sub" id="viewSub"></p>
+        </div>
+        <div class="view-actions">
+          <div class="seg" id="viewModes" role="tablist" aria-label="Project view" hidden>
+            <button type="button" role="tab" data-mode="list"><i data-icon="description"></i><span>List</span></button>
+            <button type="button" role="tab" data-mode="roadmap"><i data-icon="route"></i><span>Roadmap</span></button>
+            <button type="button" role="tab" data-mode="mindmap"><i data-icon="mindmap"></i><span>Mind map</span></button>
+          </div>
+          <button class="chip-btn ai-btn" id="suggestBtn" hidden><i data-icon="sparkle"></i><span>Suggest</span></button>
+          <button class="chip-btn" id="showDoneBtn" aria-pressed="false"><i data-icon="eye"></i><span>Completed</span></button>
+          <button class="icon-btn danger" id="deleteProject" title="Delete project" aria-label="Delete project" hidden><i data-icon="trash"></i></button>
+        </div>
+      </header>
+
+      <section id="taskArea" class="task-area" tabindex="-1"></section>
+
+      <form class="inline-add" id="inlineAdd">
+        <span class="add-dot ghost"><i data-icon="plus"></i></span>
+        <span class="ghost-wrap"><input id="inlineInput" placeholder="Add task" autocomplete="off" aria-label="Add task"><span class="ac-ghost" aria-hidden="true"></span></span>
+        <span class="inline-hint">Try “Pay rent tomorrow p1 #Home @bills”</span>
+      </form>
+    </main>
+  </div>
+
+  <!-- Quick add -->
+  <div class="overlay" id="quickAdd" hidden>
+    <form class="sheet quick" id="quickAddForm" role="dialog" aria-label="Add task">
+      <span class="ghost-wrap title"><input id="qaTitle" class="title-input" placeholder="Task name" autocomplete="off" required><span class="ac-ghost" aria-hidden="true"></span></span>
+      <textarea id="qaDesc" class="desc-input" placeholder="Description" rows="1"></textarea>
+      <div class="token-row" id="qaPreview"></div>
+      <div class="chip-row">
+        <label class="chip"><i data-icon="calendar"></i><input type="date" id="qaDate" aria-label="Due date"></label>
+        <label class="chip" id="qaPriorityChip"><i data-icon="flag"></i>
+          <select id="qaPriority" aria-label="Priority">
+            <option value="4">Priority 4</option><option value="3">Priority 3</option>
+            <option value="2">Priority 2</option><option value="1">Priority 1</option>
+          </select>
+        </label>
+      </div>
+      <footer class="sheet-foot">
+        <label class="chip ghost"><i data-icon="folder"></i><select id="qaProject" aria-label="Project"></select></label>
+        <span class="spacer"></span>
+        <button type="button" class="btn" id="qaCancel">Cancel</button>
+        <button type="submit" class="btn primary" id="qaSubmit">Add task</button>
+      </footer>
+    </form>
+  </div>
+
+  <!-- Task detail -->
+  <div class="overlay" id="detail" hidden>
+    <form class="sheet detail" id="detailForm" role="dialog" aria-label="Task details">
+      <header class="detail-head">
+        <span class="crumb" id="dCrumb"></span>
+        <span class="spacer"></span>
+        <button type="button" class="icon-btn danger" id="dDelete" title="Delete task" aria-label="Delete task"><i data-icon="trash"></i></button>
+        <button type="button" class="icon-btn" id="dCancel" title="Close" aria-label="Close"><i data-icon="close"></i></button>
+      </header>
+      <div class="detail-body">
+        <div class="detail-main">
+          <input id="dTitle" class="title-input" required aria-label="Task name">
+          <div class="desc-wrap"><i data-icon="description"></i><textarea id="dDesc" class="desc-input" placeholder="Description" rows="3"></textarea></div>
+          <h3 class="sub-heading"><i data-icon="subtasks"></i> Sub-tasks <span id="dSubCount"></span></h3>
+          <ul class="subtasks" id="dSubtasks"></ul>
+          <label class="sub-add"><i data-icon="plus"></i><input id="dSubInput" placeholder="Add sub-task"></label>
+        </div>
+        <aside class="detail-props">
+          <label class="prop"><span>Project</span><span class="prop-field"><i data-icon="folder"></i><select id="dProject"></select></span></label>
+          <label class="prop"><span>Date</span><span class="prop-field"><i data-icon="calendar"></i><input type="date" id="dDate"></span></label>
+          <label class="prop"><span>Priority</span><span class="prop-field" id="dPriorityField"><i data-icon="flag"></i>
+            <select id="dPriority"><option value="4">Priority 4</option><option value="3">Priority 3</option><option value="2">Priority 2</option><option value="1">Priority 1</option></select></span></label>
+          <label class="prop"><span>Repeat</span><span class="prop-field"><i data-icon="repeat"></i>
+            <select id="dRepeat"><option value="">Never</option><option value="daily">Every day</option><option value="weekly">Every week</option><option value="monthly">Every month</option></select></span></label>
+          <label class="prop"><span>Labels</span><span class="prop-field"><i data-icon="tag"></i><input id="dLabels" placeholder="work, errands"></span></label>
+          <label class="prop"><span>Phase</span><span class="prop-field"><i data-icon="route"></i><input id="dPhase" placeholder="Roadmap phase" list="phaseList"></span></label>
+          <datalist id="phaseList"></datalist>
+        </aside>
+      </div>
+      <footer class="sheet-foot">
+        <span class="spacer"></span>
+        <button type="button" class="btn" id="dClose">Cancel</button>
+        <button type="submit" class="btn primary">Save</button>
+      </footer>
+    </form>
+  </div>
+
+  <!-- Confirm -->
+  <!-- Settings -->
+  <div class="overlay" id="settingsBox" hidden>
+    <form class="sheet settings" id="settingsForm" role="dialog" aria-labelledby="settingsTitle" novalidate>
+      <header class="detail-head">
+        <span class="crumb"><i data-icon="settings"></i> <span id="settingsTitle">Settings</span></span>
+        <span class="spacer"></span>
+        <button type="button" class="icon-btn" id="sClose" aria-label="Close"><i data-icon="close"></i></button>
+      </header>
+      <div class="settings-body">
+        <section class="set-group">
+          <div class="set-head">
+            <div><h3><i data-icon="sparkle"></i> AI assistant</h3><p>Text completion, task suggestions, roadmaps and mind maps.</p></div>
+            <label class="switch"><input type="checkbox" id="sEnabled"><span></span></label>
+          </div>
+          <div class="set-fields" id="sFields">
+            <label class="field"><span>Provider</span><select id="sProvider"></select></label>
+            <label class="field"><span>API address</span><input id="sBase" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+            <label class="field" id="sKeyField"><span>API key</span>
+              <span class="key-wrap"><input id="sKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="button" class="icon-btn" id="sKeyShow" aria-label="Show key"><i data-icon="eye"></i></button></span>
+            </label>
+            <label class="field"><span>Model</span>
+              <span class="key-wrap"><input id="sModel" list="sModelList" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Choose or type a model"><button type="button" class="btn sm" id="sLoadModels">Load models</button></span>
+              <datalist id="sModelList"></datalist>
+            </label>
+            <div class="set-toggles">
+              <label class="check-row"><input type="checkbox" id="sCompletion"> <span>Complete task names as I type <small>(press Tab to accept)</small></span></label>
+              <label class="check-row"><input type="checkbox" id="sSuggestions"> <span>Show the <b>Suggest</b> button for next tasks</span></label>
+            </div>
+            <div class="set-test">
+              <button type="button" class="btn" id="sTest"><i data-icon="sparkle"></i> Test connection</button>
+              <span class="test-result" id="sTestResult" role="status"></span>
+            </div>
+            <p class="set-note">Your API key is stored only on this device and never syncs to your PC or phone. When you use an AI feature, the text involved (task names, your goal) is sent to the provider you chose.</p>
+          </div>
+        </section>
+      </div>
+      <footer class="sheet-foot">
+        <span class="spacer"></span>
+        <button type="button" class="btn" id="sCancel">Cancel</button>
+        <button type="submit" class="btn primary">Save</button>
+      </footer>
+    </form>
+  </div>
+
+  <!-- AI: suggested tasks -->
+  <div class="overlay" id="suggestBox" hidden>
+    <div class="sheet ai-sheet" role="dialog" aria-labelledby="suggestTitle">
+      <header class="detail-head">
+        <span class="crumb ai"><i data-icon="sparkle"></i> <span id="suggestTitle">Suggested tasks</span></span>
+        <span class="spacer"></span>
+        <button type="button" class="icon-btn" id="sgClose" aria-label="Close"><i data-icon="close"></i></button>
+      </header>
+      <div class="ai-body" id="sgBody"></div>
+      <footer class="sheet-foot">
+        <button type="button" class="btn" id="sgRetry"><i data-icon="sync"></i> Try again</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn primary" id="sgAdd" disabled>Add selected</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- AI: roadmap -->
+  <div class="overlay" id="roadmapBox" hidden>
+    <form class="sheet ai-sheet wide" id="roadmapForm" role="dialog" aria-labelledby="rmTitle" novalidate>
+      <header class="detail-head">
+        <span class="crumb ai"><i data-icon="route"></i> <span id="rmTitle">Plan a roadmap</span></span>
+        <span class="spacer"></span>
+        <button type="button" class="icon-btn" id="rmClose" aria-label="Close"><i data-icon="close"></i></button>
+      </header>
+      <div class="ai-body">
+        <div class="rm-inputs" id="rmInputs">
+          <label class="field"><span>What do you want to achieve?</span><textarea id="rmGoal" rows="3" placeholder="e.g. Launch my portfolio website with 5 case studies"></textarea></label>
+          <div class="rm-row">
+            <label class="field"><span>Timeframe</span><select id="rmTime"><option>2 weeks</option><option selected>1 month</option><option>3 months</option><option>6 months</option><option>1 year</option></select></label>
+            <label class="field"><span>Start</span><input type="date" id="rmStart"></label>
+          </div>
+        </div>
+        <div id="rmPreview"></div>
+      </div>
+      <footer class="sheet-foot">
+        <button type="button" class="btn" id="rmBack" hidden>Edit goal</button>
+        <span class="spacer"></span>
+        <button type="submit" class="btn primary" id="rmGo"><i data-icon="sparkle"></i> Generate roadmap</button>
+      </footer>
+    </form>
+  </div>
+
+  <!-- AI: brainstorm mind map -->
+  <div class="overlay" id="brainstormBox" hidden>
+    <form class="sheet ai-sheet" id="brainstormForm" role="dialog" aria-labelledby="bsTitle" novalidate>
+      <header class="detail-head">
+        <span class="crumb ai"><i data-icon="mindmap"></i> <span id="bsTitle">Brainstorm a mind map</span></span>
+        <span class="spacer"></span>
+        <button type="button" class="icon-btn" id="bsClose" aria-label="Close"><i data-icon="close"></i></button>
+      </header>
+      <div class="ai-body">
+        <label class="field"><span>Topic</span><textarea id="bsTopic" rows="3" placeholder="e.g. Moving to a new apartment"></textarea></label>
+        <p class="set-note">AI creates a project: the main branches become tasks and their ideas become sub-tasks. It opens as a mind map.</p>
+        <p class="form-error" id="bsError" role="alert" hidden></p>
+      </div>
+      <footer class="sheet-foot">
+        <span class="spacer"></span>
+        <button type="button" class="btn" id="bsCancel">Cancel</button>
+        <button type="submit" class="btn primary" id="bsGo"><i data-icon="sparkle"></i> Create mind map</button>
+      </footer>
+    </form>
+  </div>
+
+  <div class="overlay" id="confirmBox" hidden>
+    <div class="sheet confirm" role="alertdialog" aria-labelledby="confirmTitle">
+      <h2 id="confirmTitle">Delete project?</h2>
+      <p id="confirmText"></p>
+      <footer class="sheet-foot">
+        <span class="spacer"></span>
+        <button type="button" class="btn" id="confirmNo">Cancel</button>
+        <button type="button" class="btn danger-fill" id="confirmYes">Delete</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Connect phone (desktop only) -->
+  <div class="overlay" id="pairBox" hidden>
+    <div class="sheet pair" role="dialog" aria-labelledby="pairTitle">
+      <header class="detail-head">
+        <span class="crumb"><i data-icon="phone"></i> Connect your phone</span>
+        <span class="spacer"></span>
+        <button type="button" class="icon-btn" id="pairClose" aria-label="Close"><i data-icon="close"></i></button>
+      </header>
+      <div class="pair-body">
+        <div class="qr-wrap"><img id="pairQr" alt="QR code that opens Tasklist on your phone"></div>
+        <div class="pair-steps">
+          <h2 id="pairTitle">Scan with your phone’s camera</h2>
+          <ol>
+            <li>Connect your phone to the <b>same Wi-Fi</b> as this PC.</li>
+            <li>Scan the code. Tasklist opens and pairs automatically.</li>
+            <li>Add it to your home screen to use it like an app.</li>
+          </ol>
+          <div class="pair-app">
+            <b>Using the Android app?</b> Tap <i>Connect</i>, then <i>Scan the QR code</i>. Or enter:
+            <div class="pair-fields">
+              <span><small>PC address</small><code id="pairAddress">—</code></span>
+              <span><small>Code</small><code id="pairCode" class="code">——————</code></span>
+            </div>
+            <small class="pair-expire">The code works for 10 minutes.</small>
+          </div>
+          <p class="pair-url">Browser address: <code id="pairUrl"></code>. Typing it opens Tasklist without syncing; scanning the QR code pairs it.</p>
+          <p class="pair-note" id="pairNote">Tasks sync whenever this PC is on and Tasklist is running in the tray.</p>
+        </div>
+      </div>
+      <footer class="sheet-foot">
+        <button type="button" class="btn" id="pairReset" title="Disconnects every paired phone">Unpair all phones</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn primary" id="pairDone">Done</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Connect to PC (Android app) -->
+  <div class="overlay" id="connectBox" hidden>
+    <form class="sheet connect" id="connectForm" role="dialog" aria-labelledby="connectTitle" novalidate>
+      <header class="detail-head">
+        <span class="crumb"><i data-icon="phone"></i> <span id="connectTitle">Connect to your PC</span></span>
+        <span class="spacer"></span>
+        <button type="button" class="icon-btn" id="cClose" aria-label="Close"><i data-icon="close"></i></button>
+      </header>
+      <div class="connect-body">
+        <p>On your PC, open Tasklist and click <b>Connect</b> at the bottom of the sidebar.</p>
+        <button type="button" class="btn primary scan-btn" id="cScan"><i data-icon="qr"></i> Scan the QR code</button>
+        <div class="or-divider"><span>or enter the address and code</span></div>
+        <label class="field"><span>PC address</span><input id="cAddress" inputmode="url" placeholder="192.168.1.6:5180" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+        <label class="field"><span>Code</span><input id="cCode" class="code-input" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="000000" autocomplete="one-time-code"></label>
+        <p class="form-error" id="cError" role="alert" hidden></p>
+      </div>
+      <footer class="sheet-foot">
+        <span class="spacer"></span>
+        <button type="button" class="btn" id="cCancel">Cancel</button>
+        <button type="submit" class="btn primary" id="cSubmit">Connect</button>
+      </footer>
+    </form>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-ico"><i data-icon="check"></i></span>
+    <span id="toastMsg"></span>
+    <button id="toastUndo">Undo</button>
+    <button class="icon-btn sm" id="toastClose" aria-label="Dismiss"><i data-icon="close"></i></button>
+  </div>
+
+  <script src="icons.js"></script>
+  <script src="parser.js"></script>
+  <script src="sync.js"></script>
+  <script src="ai.js"></script>
+  <script src="mindmap.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

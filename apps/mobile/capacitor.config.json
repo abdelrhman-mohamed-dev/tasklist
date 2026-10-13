@@ -1,0 +1,17 @@
+{
+  "appId": "com.tasklist.app",
+  "appName": "Tasklist",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "http",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    }
+  }
+}

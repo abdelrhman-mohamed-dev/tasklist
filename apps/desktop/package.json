@@ -1,0 +1,39 @@
+{
+  "name": "tasklist-desktop",
+  "productName": "Tasklist",
+  "version": "1.0.0",
+  "description": "Tasklist for Windows (Electron)",
+  "main": "electron/main.js",
+  "author": "abdelrhman",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "copy-web": "node scripts/copy-web.js",
+    "start": "npm run copy-web && electron .",
+    "dist": "npm run copy-web && electron-builder --win && node scripts/release.js"
+  },
+  "build": {
+    "appId": "com.tasklist.desktop",
+    "productName": "Tasklist",
+    "icon": "electron/icon.png",
+    "files": [
+      "electron/**/*",
+      "web/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "executableName": "TasklistApp"
+  },
+  "devDependencies": {
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}

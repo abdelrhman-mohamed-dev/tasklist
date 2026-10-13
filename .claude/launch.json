@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "website",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "website"],
+      "port": 5175
+    },
+    {
+      "name": "web-app",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/serve.js", "packages/core", "5173"],
+      "port": 5173
+    }
+  ]
+}
